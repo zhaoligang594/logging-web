@@ -21,19 +21,18 @@ public class MainConfig {
 #### 2.2 在我们的接口上使用配置打印日志的方法
 
 ```java
-	@WebLogging(methods = {"add"})
-			public interface MyService {
-    		int add(int a, int b);
-  }
+@WebLogging(methods = {"add"})
+public interface MyService {
+    int add(int a, int b);
+}
 ```
 
 #### 2.3 执行结果
 
 ```java
 ....LoggingMethodInterceptor - 接口请求数据:【[1,2]】||方法:【add】|| 时间:【2020-07-15 17:13:38】
-com.breakpoint.vip.aspectj.MyAspectj.pointcut.before
-com.breakpoint.vip.aspectj.MyAspectj.pointcut.after
-com.breakpoint.vip.aspectj.MyAspectj.afterReturning
+.
+.
 ....LoggingMethodInterceptor - 接口请求完成，进行返回结果：【3】
 ```
 
