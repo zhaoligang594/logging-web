@@ -8,7 +8,6 @@ import java.lang.reflect.Proxy;
  * 获取执行的代理对象
  *
  * @author :breakpoint/赵立刚
- * @date : 2020/07/15
  */
 public class LoggingFactory {
 

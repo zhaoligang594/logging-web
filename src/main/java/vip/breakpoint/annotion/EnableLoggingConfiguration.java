@@ -7,7 +7,6 @@ import java.lang.annotation.*;
 
 /**
  * @author :breakpoint/赵立刚
- * @date : 2020/07/15
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

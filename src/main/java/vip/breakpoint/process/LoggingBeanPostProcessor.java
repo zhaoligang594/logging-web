@@ -18,7 +18,6 @@ import java.util.List;
 
 /**
  * @author :breakpoint/赵立刚
- * @date : 2020/07/15
  */
 public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor, ApplicationContextAware {
 

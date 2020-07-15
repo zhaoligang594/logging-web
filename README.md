@@ -6,7 +6,17 @@
 
 ### 二、项目的配置
 
-#### 2.1 首先在我们的配置类上开启日志功能
+#### 2.1 引入依赖
+
+```xml
+<dependency>
+  <groupId>vip.breakpoint</groupId>
+  <artifactId>logging-web</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
+#### 2.2 首先在我们的配置类上开启日志功能
 
 ```java
 @Configuration
@@ -18,7 +28,7 @@ public class MainConfig {
 }
 ```
 
-#### 2.2 在我们的接口上使用配置打印日志的方法
+#### 2.3 在我们的接口上使用配置打印日志的方法
 
 ```java
 @WebLogging(methods = {"add"})
@@ -27,7 +37,7 @@ public interface MyService {
 }
 ```
 
-#### 2.3 执行结果
+#### 2.4 执行结果
 
 ```java
 ....LoggingMethodInterceptor - 接口请求数据:【[1,2]】||方法:【add】|| 时间:【2020-07-15 17:13:38】
