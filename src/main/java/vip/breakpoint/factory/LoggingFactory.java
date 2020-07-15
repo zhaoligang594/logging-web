@@ -1,6 +1,6 @@
-package com.breakpoint.vip.factory;
+package vip.breakpoint.factory;
 
-import com.breakpoint.vip.annotion.WebLogging;
+import vip.breakpoint.annotion.WebLogging;
 
 import java.lang.reflect.Proxy;
 

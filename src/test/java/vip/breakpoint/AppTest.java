@@ -1,4 +1,4 @@
-package com.breakpoint.vip;
+package vip.breakpoint;
 
 import static org.junit.Assert.assertTrue;
 

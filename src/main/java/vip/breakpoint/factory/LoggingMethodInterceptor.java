@@ -1,9 +1,9 @@
-package com.breakpoint.vip.factory;
+package vip.breakpoint.factory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.breakpoint.vip.annotion.WebLogging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vip.breakpoint.annotion.WebLogging;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

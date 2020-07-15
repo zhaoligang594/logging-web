@@ -1,4 +1,4 @@
-package com.breakpoint.vip.exception;
+package vip.breakpoint.exception;
 
 import org.springframework.beans.BeansException;
 

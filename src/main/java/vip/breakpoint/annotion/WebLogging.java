@@ -1,4 +1,4 @@
-package com.breakpoint.vip.annotion;
+package vip.breakpoint.annotion;
 
 import java.lang.annotation.*;
 

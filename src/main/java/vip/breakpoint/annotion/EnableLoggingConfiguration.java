@@ -1,7 +1,7 @@
-package com.breakpoint.vip.annotion;
+package vip.breakpoint.annotion;
 
-import com.breakpoint.vip.config.LoggingBeanDefinitionRegistrar;
 import org.springframework.context.annotation.Import;
+import vip.breakpoint.config.LoggingBeanDefinitionRegistrar;
 
 import java.lang.annotation.*;
 

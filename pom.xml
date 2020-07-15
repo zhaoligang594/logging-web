@@ -9,11 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>vip.breakpoint</groupId>
+
     <artifactId>logging-web</artifactId>
 
+    <packaging>jar</packaging>
+
     <name>logging-web</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <url>https://github.com/FREEZINGPOINT/logging-web</url>
+
+    <description>日志中间件</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

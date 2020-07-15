@@ -1,10 +1,10 @@
-package com.breakpoint.vip.config;
+package vip.breakpoint.config;
 
-import com.breakpoint.vip.process.LoggingBeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
+import vip.breakpoint.process.LoggingBeanPostProcessor;
 
 /**
  * @author :breakpoint/赵立刚

@@ -1,8 +1,6 @@
-package com.breakpoint.vip.process;
+package vip.breakpoint.process;
 
-import com.breakpoint.vip.annotion.WebLogging;
-import com.breakpoint.vip.exception.MultiInterfaceBeansException;
-import com.breakpoint.vip.factory.LoggingFactory;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -11,6 +9,9 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import vip.breakpoint.annotion.WebLogging;
+import vip.breakpoint.exception.MultiInterfaceBeansException;
+import vip.breakpoint.factory.LoggingFactory;
 
 import java.util.ArrayList;
 import java.util.List;
