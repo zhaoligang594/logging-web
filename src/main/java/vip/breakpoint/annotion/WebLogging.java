@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 public @interface WebLogging {
     // 需要打印日志的方法
     String[] methods() default {};
-    String timePattern() default "yyyy-MM-dd HH24:mm:ss";
+    String timePattern() default "yyyy-MM-dd HH:mm:ss";
 }
