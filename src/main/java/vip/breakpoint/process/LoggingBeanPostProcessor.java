@@ -15,7 +15,9 @@ import vip.breakpoint.factory.EasyLoggingHandle;
 import vip.breakpoint.factory.LoggingFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author :breakpoint/赵立刚
@@ -30,6 +32,13 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
 
     private EasyLoggingHandle easyLoggingHandle;
 
+
+    private Map<String, Object> beanNamesMap = new HashMap<String, Object>();
+
+
+    private Object BEAN_NAME_OBJECT = new Object();
+
+
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         // nothing to do
@@ -38,29 +47,15 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        BeanDefinition beanDefinition = registry.getBeanDefinition(beanName);
-        String beanClassName = beanDefinition.getBeanClassName();
-        try {
-            Class<?> oriClass = Class.forName(beanClassName);
-            Class<?> targetClass = getTargetClass(oriClass);
-            if (null != targetClass) {
-                WebLogging webLogging = targetClass.getAnnotation(WebLogging.class);
-                if (null != webLogging) {
-                    try {
-                        easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
-                    } catch (BeansException e) {
-                        //e.printStackTrace();
-                        easyLoggingHandle = null;
-                    }
-                    Object loggingProxyObject = LoggingFactory.getLoggingJDKProxyObject(applicationContext.getClassLoader(),
-                            webLogging, bean, targetClass, easyLoggingHandle);
-                    if (null != loggingProxyObject) {
-                        return loggingProxyObject;
-                    }
-                }
-            } else {
-                if (!oriClass.isInterface()) {
-                    WebLogging webLogging = oriClass.getAnnotation(WebLogging.class);
+
+        if (null != beanNamesMap.get(beanName)) {
+            BeanDefinition beanDefinition = registry.getBeanDefinition(beanName);
+            String beanClassName = beanDefinition.getBeanClassName();
+            try {
+                Class<?> oriClass = Class.forName(beanClassName);
+                Class<?> targetClass = getTargetClass(oriClass);
+                if (null != targetClass) {
+                    WebLogging webLogging = targetClass.getAnnotation(WebLogging.class);
                     if (null != webLogging) {
                         try {
                             easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
@@ -68,15 +63,33 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
                             //e.printStackTrace();
                             easyLoggingHandle = null;
                         }
-                        Object loggingProxyObject = LoggingFactory.getLoggingCGLibProxyObject(applicationContext.getClassLoader(),
-                                webLogging, bean, oriClass, easyLoggingHandle);
+                        Object loggingProxyObject = LoggingFactory.getLoggingJDKProxyObject(applicationContext.getClassLoader(),
+                                webLogging, bean, targetClass, easyLoggingHandle);
                         if (null != loggingProxyObject) {
                             return loggingProxyObject;
                         }
                     }
+                } else {
+                    if (!oriClass.isInterface()) {
+                        WebLogging webLogging = oriClass.getAnnotation(WebLogging.class);
+                        if (null != webLogging) {
+                            try {
+                                easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
+                            } catch (BeansException e) {
+                                //e.printStackTrace();
+                                easyLoggingHandle = null;
+                            }
+                            Object loggingProxyObject = LoggingFactory.getLoggingCGLibProxyObject(applicationContext.getClassLoader(),
+                                    webLogging, bean, oriClass, easyLoggingHandle);
+                            if (null != loggingProxyObject) {
+                                return loggingProxyObject;
+                            }
+                        }
+                    }
                 }
+            } catch (ClassNotFoundException e) {
+
             }
-        } catch (ClassNotFoundException e) {
 
         }
         return bean;
@@ -99,7 +112,6 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
         }
     }
 
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
@@ -113,5 +125,9 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
+        String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            beanNamesMap.put(beanDefinitionName, BEAN_NAME_OBJECT);
+        }
     }
 }
