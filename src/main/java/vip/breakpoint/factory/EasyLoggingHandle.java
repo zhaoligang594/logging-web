@@ -9,10 +9,30 @@ import java.lang.reflect.Method;
  */
 public interface EasyLoggingHandle {
 
-    // before
+    /**
+     * before invoke method process
+     *
+     * @param methodName is methodName
+     * @param methodArgs is req args
+     */
     void invokeBefore(String methodName, Object[] methodArgs);
 
-    // after
+    /**
+     * after invoke method process
+     *
+     * @param methodName is methodName
+     * @param methodArgs is req args
+     * @param resVal     is return value
+     */
     void invokeAfter(String methodName, Object[] methodArgs, Object resVal);
+
+    /**
+     * when throw exception
+     *
+     * @param methodName is methodName
+     * @param methodArgs is req args
+     * @param e          is throws exception
+     */
+    void invokeOnThrowing(String methodName, Object[] methodArgs, Exception e);
 
 }
