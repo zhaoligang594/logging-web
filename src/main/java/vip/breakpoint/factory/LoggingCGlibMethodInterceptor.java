@@ -52,7 +52,7 @@ public class LoggingCGlibMethodInterceptor implements MethodInterceptor {
             log.info("接口请求数据:【{}】||方法:【{}】|| 时间:【{}】", JSONObject.toJSONString(objects), method.getName(),
                     pdf.format(new Date()));
             if (null != easyLoggingHandle) {
-                easyLoggingHandle.invokeBefore(target, method, objects);
+                easyLoggingHandle.invokeBefore(method.getName(), objects);
             }
         }
         //Object resVal = methodProxy.invokeSuper(o, objects);
@@ -60,7 +60,7 @@ public class LoggingCGlibMethodInterceptor implements MethodInterceptor {
         if (null != methodMap.get(method.getName())) {
             log.info("接口请求完成，进行返回结果：【{}】|| 完成时间:【{}】", JSONObject.toJSONString(resVal), pdf.format(new Date()));
             if (null != easyLoggingHandle) {
-                easyLoggingHandle.invokeAfter(target, method, objects, resVal);
+                easyLoggingHandle.invokeAfter(method.getName(), objects, resVal);
             }
         }
         return resVal;

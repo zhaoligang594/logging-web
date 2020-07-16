@@ -46,7 +46,7 @@ public class LoggingJDKMethodInterceptor implements InvocationHandler {
         if (null != methodMap.get(method.getName())) {
             log.info("接口请求数据:【{}】||方法:【{}】|| 时间:【{}】", JSONObject.toJSONString(args), method.getName(), pdf.format(new Date()));
             if (null != easyLoggingHandle) {
-                easyLoggingHandle.invokeBefore(target, method, args);
+                easyLoggingHandle.invokeBefore(method.getName(), args);
             }
         }
 
@@ -55,7 +55,7 @@ public class LoggingJDKMethodInterceptor implements InvocationHandler {
         if (null != methodMap.get(method.getName())) {
             log.info("接口请求完成，进行返回结果：【{}】|| 完成时间:【{}】", JSONObject.toJSONString(resVal), pdf.format(new Date()));
             if (null != easyLoggingHandle) {
-                easyLoggingHandle.invokeAfter(target, method, args, resVal);
+                easyLoggingHandle.invokeAfter(method.getName(), args, resVal);
             }
         }
         return resVal;

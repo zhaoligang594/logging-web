@@ -10,9 +10,9 @@ import java.lang.reflect.Method;
 public interface EasyLoggingHandle {
 
     // before
-    void invokeBefore(Object proxy, Method method, Object[] args);
+    void invokeBefore(String methodName, Object[] methodArgs);
 
     // after
-    void invokeAfter(Object proxy, Method method, Object[] args, Object resVal);
+    void invokeAfter(String methodName, Object[] methodArgs, Object resVal);
 
 }
