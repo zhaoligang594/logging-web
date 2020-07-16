@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import vip.breakpoint.annotion.WebLogging;
 import vip.breakpoint.exception.MultiInterfaceBeansException;
+import vip.breakpoint.factory.EasyLoggingHandle;
 import vip.breakpoint.factory.LoggingFactory;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
 
     private ConfigurableListableBeanFactory beanFactory;
 
+    private EasyLoggingHandle easyLoggingHandle;
+
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         // nothing to do
@@ -35,9 +38,6 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-//        if ("myService".equals(beanName)) {
-//            System.out.println(beanName);
-//        }
         BeanDefinition beanDefinition = registry.getBeanDefinition(beanName);
         String beanClassName = beanDefinition.getBeanClassName();
         try {
@@ -46,10 +46,33 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
             if (null != targetClass) {
                 WebLogging webLogging = targetClass.getAnnotation(WebLogging.class);
                 if (null != webLogging) {
-                    Object loggingProxyObject = LoggingFactory.getLoggingProxyObject(applicationContext.getClassLoader(),
-                            webLogging, bean, targetClass);
+                    try {
+                        easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
+                    } catch (BeansException e) {
+                        //e.printStackTrace();
+                        easyLoggingHandle = null;
+                    }
+                    Object loggingProxyObject = LoggingFactory.getLoggingJDKProxyObject(applicationContext.getClassLoader(),
+                            webLogging, bean, targetClass, easyLoggingHandle);
                     if (null != loggingProxyObject) {
                         return loggingProxyObject;
+                    }
+                }
+            } else {
+                if (!oriClass.isInterface()) {
+                    WebLogging webLogging = oriClass.getAnnotation(WebLogging.class);
+                    if (null != webLogging) {
+                        try {
+                            easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
+                        } catch (BeansException e) {
+                            //e.printStackTrace();
+                            easyLoggingHandle = null;
+                        }
+                        Object loggingProxyObject = LoggingFactory.getLoggingCGLibProxyObject(applicationContext.getClassLoader(),
+                                webLogging, bean, oriClass, easyLoggingHandle);
+                        if (null != loggingProxyObject) {
+                            return loggingProxyObject;
+                        }
                     }
                 }
             }

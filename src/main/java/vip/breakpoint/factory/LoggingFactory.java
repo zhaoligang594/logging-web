@@ -1,5 +1,6 @@
 package vip.breakpoint.factory;
 
+import net.sf.cglib.proxy.Enhancer;
 import vip.breakpoint.annotion.WebLogging;
 
 import java.lang.reflect.Proxy;
@@ -9,11 +10,27 @@ import java.lang.reflect.Proxy;
  *
  * @author :breakpoint/赵立刚
  */
-public class LoggingFactory {
+public final class LoggingFactory {
 
-    // 返回代理对象
-    public static Object getLoggingProxyObject(ClassLoader classLoader, WebLogging webLogging, Object bean, Class<?> targetClass) {
-        LoggingMethodInterceptor interceptor = new LoggingMethodInterceptor(webLogging, bean);
+    // jdk proxy
+    public static Object getLoggingJDKProxyObject(ClassLoader classLoader, WebLogging webLogging,
+                                                  Object bean, Class<?> targetClass, EasyLoggingHandle easyLoggingHandle) {
+        LoggingJDKMethodInterceptor interceptor = new LoggingJDKMethodInterceptor(webLogging, bean, easyLoggingHandle);
         return Proxy.newProxyInstance(classLoader, new Class[]{targetClass}, interceptor);
+    }
+
+    // cglib proxy
+    public static Object getLoggingCGLibProxyObject(ClassLoader classLoader, WebLogging webLogging,
+                                                    Object bean, Class<?> targetClass, EasyLoggingHandle easyLoggingHandle) {
+
+        LoggingCGlibMethodInterceptor interceptor = new LoggingCGlibMethodInterceptor(webLogging, bean, easyLoggingHandle);
+
+        Enhancer enhancer = new Enhancer();
+
+        enhancer.setSuperclass(targetClass);
+
+        enhancer.setCallback(interceptor);
+
+        return enhancer.create();
     }
 }

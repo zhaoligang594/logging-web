@@ -4,7 +4,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
-import vip.breakpoint.process.LoggingBeanPostProcessor;
+import vip.breakpoint.XmlEnableLoggingConfiguration;
 
 /**
  * @author :breakpoint/赵立刚
@@ -15,8 +15,8 @@ public class LoggingBeanDefinitionRegistrar implements ImportBeanDefinitionRegis
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
                                         BeanDefinitionRegistry registry) {
-        registry.registerBeanDefinition(LoggingBeanPostProcessor.class.getName(),
-                new RootBeanDefinition(LoggingBeanPostProcessor.class));
+        registry.registerBeanDefinition(XmlEnableLoggingConfiguration.class.getName(),
+                new RootBeanDefinition(XmlEnableLoggingConfiguration.class));
 
     }
 }
