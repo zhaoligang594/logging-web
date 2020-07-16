@@ -3,10 +3,14 @@
 #### 1.1 项目的主要功能
 
 * 该项目是一个日志的中间件，实现可插拔的日志打印。
-
 * 打印日志的范围主要是对于接口的方法进行打印。
 
-### 二、项目的配置
+#### 1.2 主要的使用范围
+
+* 无侵入的打印业务逻辑层的执行日志
+* 统一的实现，避免了其他实现的繁杂的配置以及实现的过程
+
+### 二、简单开始组件
 
 #### 2.1 引入依赖
 
@@ -16,11 +20,13 @@
 <dependency>
   <groupId>vip.breakpoint</groupId>
   <artifactId>logging-web</artifactId>
-  <version>0.5.0</version>
+  <version>1.0.0.RELEASE</version>
 </dependency>
 ```
 
 #### 2.2 首先在我们的配置类上开启日志功能
+
+注解配置：
 
 ```java
 @Configuration
@@ -32,7 +38,16 @@ public class MainConfig {
 }
 ```
 
+xml配置：
+
+```xml
+<!--  日志配置  -->
+    <bean class="vip.breakpoint.XmlEnableLoggingConfiguration"/>
+```
+
 #### 2.3 在我们的接口上使用配置打印日志的方法
+
+##### 2.3.1 接口上配置注解
 
 ```java
 @WebLogging(methods = {"add"})
@@ -41,106 +56,138 @@ public interface MyService {
 }
 ```
 
-#### 2.4 执行结果
+##### 2.3.2 实现类上配置注解
 
 ```java
-....LoggingMethodInterceptor - 接口请求数据:【[1,2]】||方法:【add】|| 时间:【2020-07-15 17:13:38】
-.
-.
-....LoggingMethodInterceptor - 接口请求完成，进行返回结果：【3】
-```
-
-#### 2.5 自定义回调
-
-> 这个部分可以写自己的业务逻辑，比如，可以使用MQ存储处理的日志。
-
-##### 2.5.1 创建实现类并实现EasyLoggingHandle
-
-```java
+/**
+ * @author :breakpoint/赵立刚
+ * @date : 2020/07/16
+ */
+@Slf4j
 @Service
-public class MyEasyLoggingHandle implements EasyLoggingHandle {
+@WebLogging(methods = {"sub"})
+public class SubService {
 
-    @Override
-    public void invokeBefore(Object proxy, Method method, Object[] args) {
-        System.out.println("vip.breakpoint.service.MyEasyLoggingHandle.invokeBefore");
-    }
-
-    @Override
-    public void invokeAfter(Object proxy, Method method, Object[] args, Object resVal) {
-        System.out.println("vip.breakpoint.service.MyEasyLoggingHandle.invokeAfter");
+    public int sub(int a, int b) {
+        log.info("vip.breakpoint.service.SubService.sub");
+        //int i = 1 / 0;
+        return a - b;
     }
 }
 ```
 
-### 2.5.2 执行结果
+#### 2.4 自定义回调组件
+
+> 继承 EasyLoggingHandleAdaptor 或者实现  EasyLoggingHandle
+
+```java
+/**
+ * @author :breakpoint/赵立刚
+ * @date : 2020/07/16
+ */
+@Service
+public class MyEasyLoggingHandle extends EasyLoggingHandleAdaptor {
+
+    /**
+     * before invoke method process
+     *
+     * @param methodName is methodName
+     * @param methodArgs is req args
+     */
+    @Override
+    public void invokeBefore(String methodName, Object[] methodArgs) {
+      // 自己的业务逻辑书写的地方，在方法之前调用
+        System.out.println("vip.breakpoint.service.MyEasyLoggingHandle.invokeBefore");
+    }
+
+    /**
+     * after invoke method process
+     *
+     * @param methodName is methodName
+     * @param methodArgs is req args
+     * @param resVal     is return value
+     */
+    @Override
+    public void invokeAfter(String methodName, Object[] methodArgs, Object resVal) {
+      // 自己的业务逻辑书写的地方，在方法之后调用
+        System.out.println("vip.breakpoint.service.MyEasyLoggingHandle.invokeAfter");
+    }
+
+    @Override
+    public void invokeOnThrowing(String methodName, Object[] methodArgs, Throwable e) throws Throwable {
+      	// 自己的业务逻辑书写的地方，在出现异常调用
+        super.invokeOnThrowing(methodName, methodArgs, e);
+    }
+}
+```
+
+#### 2.5 测试数据执行结果
 
 ```shell
-....LoggingJDKMethodInterceptor - 接口请求数据:【[12,3]】||方法:【sub】|| 时间:【2020-07-16 11:09:01】
+# 执行方法前，logger 日志打印
+06:33:00.135 [main] INFO vip.breakpoint.factory.LoggingCGlibMethodInterceptor - request params:【[12,3]】||request method:【sub】|| request time :【2020-07-17 06:33:00】
+# 调用回调定义组件 回调 方法执行前
 vip.breakpoint.service.MyEasyLoggingHandle.invokeBefore
-.
-.
-.
-.....LoggingJDKMethodInterceptor - 接口请求完成，进行返回结果：【9】|| 完成时间:【2020-07-16 11:09:01】
+## 调用 Spring自己的前置通知
+com.breakpoint.vip.aspectj.MyAspectj.pointcut.before
+## 调用 真正的方法
+06:33:00.153 [main] INFO vip.breakpoint.service.SubService - vip.breakpoint.service.SubService.sub
+## 调用 Spring自己的后置
+com.breakpoint.vip.aspectj.MyAspectj.pointcut.after
+## 调用 Spring自己的返回前通知
+com.breakpoint.vip.aspectj.MyAspectj.afterReturning
+## 执行方法后，logger 日志打印
+06:33:00.153 [main] INFO vip.breakpoint.factory.LoggingCGlibMethodInterceptor - request params:【[12,3]】||request method:【sub】|| complete time:【2020-07-17 06:33:00】||return val:【9】
+# 调用回调定义组件 回调 方法执行后
 vip.breakpoint.service.MyEasyLoggingHandle.invokeAfter
 ```
 
 ### 三、项目依赖
 
 * JDK 1.8
-
-```xml
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <!--    spring    -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>5.1.9.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--  log -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.28</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
-        </dependency>
-        <!-- json   -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.46</version>
-        </dependency>
-        <!--  cglib  -->
-        <!-- https://mvnrepository.com/artifact/cglib/cglib -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-```
-
-
+* Spring项目环境
 
 ### 四、项目结构
 
-![image-20200715171512729](pic/image-20200715171512729.png)
+```shell
+.
+├── README.md
+├── pic
+│   └── image-20200715171512729.png
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── vip
+    │   │       └── breakpoint
+    │   │           ├── XmlEnableLoggingConfiguration.java
+    │   │           ├── annotion
+    │   │           │   ├── EnableLoggingConfiguration.java
+    │   │           │   └── WebLogging.java
+    │   │           ├── config
+    │   │           │   └── LoggingBeanDefinitionRegistrar.java
+    │   │           ├── exception
+    │   │           │   └── MultiInterfaceBeansException.java
+    │   │           ├── factory
+    │   │           │   ├── EasyLoggingHandle.java
+    │   │           │   ├── EasyLoggingHandleAdaptor.java
+    │   │           │   ├── LoggingCGlibMethodInterceptor.java
+    │   │           │   ├── LoggingFactory.java
+    │   │           │   ├── LoggingJDKMethodInterceptor.java
+    │   │           │   ├── LoggingLevel.java
+    │   │           │   └── LoggingMethodInterceptorSupport.java
+    │   │           └── process
+    │   │               └── LoggingBeanPostProcessor.java
+    │   └── resources
+    │       └── commons-logging.properties
+    └── test
+        └── java
+            └── vip
+                └── breakpoint
+
+```
+
+### 五、写在最后
+
+由于作者水平有限，欢迎各位issue，以及提新增需求
 

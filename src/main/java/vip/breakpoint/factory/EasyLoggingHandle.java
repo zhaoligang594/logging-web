@@ -33,6 +33,6 @@ public interface EasyLoggingHandle {
      * @param methodArgs is req args
      * @param e          is throws exception
      */
-    void invokeOnThrowing(String methodName, Object[] methodArgs, Throwable e);
+    void invokeOnThrowing(String methodName, Object[] methodArgs, Throwable e) throws Throwable;
 
 }

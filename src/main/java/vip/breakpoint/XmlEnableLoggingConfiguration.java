@@ -16,7 +16,6 @@ public class XmlEnableLoggingConfiguration implements BeanDefinitionRegistryPost
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         // nothing to do
     }
-
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         registry.registerBeanDefinition(LoggingBeanPostProcessor.class.getName(),new RootBeanDefinition(LoggingBeanPostProcessor.class));

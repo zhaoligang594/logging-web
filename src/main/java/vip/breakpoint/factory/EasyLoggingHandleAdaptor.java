@@ -18,7 +18,7 @@ public abstract class EasyLoggingHandleAdaptor implements EasyLoggingHandle {
     }
 
     @Override
-    public void invokeOnThrowing(String methodName, Object[] methodArgs, Throwable e) {
+    public void invokeOnThrowing(String methodName, Object[] methodArgs, Throwable e) throws Throwable {
         // for subclass implements
     }
 }

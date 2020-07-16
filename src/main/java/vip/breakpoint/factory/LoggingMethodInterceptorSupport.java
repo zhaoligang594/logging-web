@@ -50,7 +50,7 @@ public abstract class LoggingMethodInterceptorSupport {
         this.easyLoggingHandle = easyLoggingHandle;
     }
 
-
+    // real invoke process
     protected Object invokeMethod(Object proxy, Method method, Object[] args) throws Throwable {
         // get methodName
         final String methodName = method.getName();
@@ -114,6 +114,8 @@ public abstract class LoggingMethodInterceptorSupport {
             }
             logger.error(sb.toString());
             sb.delete(0, sb.length());
+            // throw exception
+            throw throwable;
         }
         return resVal;
     }
