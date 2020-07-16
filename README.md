@@ -89,7 +89,7 @@ vip.breakpoint.service.MyEasyLoggingHandle.invokeAfter
 * JDK 1.8
 
 ```xml
-				<dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
