@@ -193,5 +193,7 @@ vip.breakpoint.service.MyEasyLoggingHandle.invokeAfter
 
 ### 六、视频介绍
 
-<iframe src="//player.bilibili.com/player.html?aid=711420710&bvid=BV1ND4y1D7NL&cid=213545156&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
+<a href="https://www.bilibili.com/video/BV1ND4y1D7NL/" target="_blank">日志中间件简介</a>
+
+https://www.bilibili.com/video/BV1ND4y1D7NL/
