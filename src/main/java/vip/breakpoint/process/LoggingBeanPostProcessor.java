@@ -10,13 +10,11 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import vip.breakpoint.annotion.WebLogging;
-import vip.breakpoint.exception.MultiInterfaceBeansException;
+import vip.breakpoint.definition.ObjectMethodDefinition;
 import vip.breakpoint.factory.EasyLoggingHandle;
 import vip.breakpoint.factory.LoggingFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,90 +23,49 @@ import java.util.Map;
 public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProcessor, BeanPostProcessor, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
-
     private BeanDefinitionRegistry registry;
-
     private ConfigurableListableBeanFactory beanFactory;
-
     private EasyLoggingHandle easyLoggingHandle;
-
-
     private Map<String, Object> beanNamesMap = new HashMap<String, Object>();
-
-
     private Object BEAN_NAME_OBJECT = new Object();
-
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        // nothing to do
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-
         if (null != beanNamesMap.get(beanName)) {
-            BeanDefinition beanDefinition = registry.getBeanDefinition(beanName);
-            String beanClassName = beanDefinition.getBeanClassName();
-            try {
-                Class<?> oriClass = Class.forName(beanClassName);
-                Class<?> targetClass = getTargetClass(oriClass);
-                if (null != targetClass) {
-                    WebLogging webLogging = targetClass.getAnnotation(WebLogging.class);
-                    if (null != webLogging) {
-                        try {
-                            easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
-                        } catch (BeansException e) {
-                            //e.printStackTrace();
-                            easyLoggingHandle = null;
-                        }
-                        Object loggingProxyObject = LoggingFactory.getLoggingJDKProxyObject(applicationContext.getClassLoader(),
-                                webLogging, bean, targetClass, easyLoggingHandle);
-                        if (null != loggingProxyObject) {
-                            return loggingProxyObject;
-                        }
-                    }
-                } else {
-                    if (!oriClass.isInterface()) {
-                        WebLogging webLogging = oriClass.getAnnotation(WebLogging.class);
-                        if (null != webLogging) {
-                            try {
-                                easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
-                            } catch (BeansException e) {
-                                //e.printStackTrace();
-                                easyLoggingHandle = null;
-                            }
-                            Object loggingProxyObject = LoggingFactory.getLoggingCGLibProxyObject(applicationContext.getClassLoader(),
-                                    webLogging, bean, oriClass, easyLoggingHandle);
-                            if (null != loggingProxyObject) {
-                                return loggingProxyObject;
-                            }
-                        }
-                    }
+            Class<?> oriClass = bean.getClass();
+            ObjectMethodDefinition methodDefinition = new ObjectMethodDefinition();
+            this.setMethodDefinition(oriClass, methodDefinition);
+            if (methodDefinition.isShouldProxy()) {
+                try {
+                    easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
+                } catch (BeansException e) {
+                    easyLoggingHandle = null;
                 }
-            } catch (ClassNotFoundException e) {
-
+                Object loggingProxyObject = LoggingFactory.getLoggingCGLibProxyObject(applicationContext.getClassLoader(),
+                        methodDefinition, bean, oriClass, easyLoggingHandle);
+                if (null != loggingProxyObject) {
+                    return loggingProxyObject;
+                }
             }
-
         }
         return bean;
     }
 
-    // 找到对应的类
-    private Class<?> getTargetClass(Class<?> oriClass) throws BeansException {
-        Class<?>[] interfaces = oriClass.getInterfaces();
-        List<Class<?>> candidate = new ArrayList<>();
-        for (Class<?> klass : interfaces) {
-            if (klass.getAnnotation(WebLogging.class) != null) candidate.add(klass);
-        }
-        if (candidate.size() > 1) {
-            throw new MultiInterfaceBeansException("there have multi interfaces from bean");
-        }
-        if (candidate.size() == 0) {
-            return null;
-        } else {
-            return candidate.get(0);
+    private void setMethodDefinition(Class<?> clazz, ObjectMethodDefinition methodDefinition) {
+        if (clazz != Object.class) {
+            WebLogging webLogging = clazz.getAnnotation(WebLogging.class);
+            if (null != webLogging) {
+                methodDefinition.addWebLogging(clazz, webLogging);
+            }
+            Class<?>[] interfaces = clazz.getInterfaces();
+            for (Class<?> klass : interfaces) {
+                this.setMethodDefinition(klass, methodDefinition);
+            }
         }
     }
 

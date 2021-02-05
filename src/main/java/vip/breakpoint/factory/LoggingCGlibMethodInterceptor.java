@@ -3,6 +3,7 @@ package vip.breakpoint.factory;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import vip.breakpoint.annotion.WebLogging;
+import vip.breakpoint.definition.ObjectMethodDefinition;
 
 import java.lang.reflect.Method;
 
@@ -12,8 +13,8 @@ import java.lang.reflect.Method;
 public class LoggingCGlibMethodInterceptor extends LoggingMethodInterceptorSupport implements MethodInterceptor {
 
 
-    public LoggingCGlibMethodInterceptor(WebLogging webLogging, Object target, EasyLoggingHandle easyLoggingHandle) {
-        super(webLogging, target, easyLoggingHandle);
+    public LoggingCGlibMethodInterceptor(ObjectMethodDefinition methodDefinition, Object target, EasyLoggingHandle easyLoggingHandle) {
+        super(methodDefinition, target, easyLoggingHandle);
     }
 
     @Override

@@ -8,76 +8,40 @@
     <!--<version>7</version>-->
     <!--</parent>-->
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>vip.breakpoint</groupId>
-
     <artifactId>logging-web</artifactId>
-
     <version>1.0.1</version>
-
     <packaging>jar</packaging>
-
     <name>logging-web</name>
-
     <url>https://github.com/FREEZINGPOINT/logging-web</url>
-
     <description>日志中间件</description>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
     </properties>
-
     <dependencies>
         <!--    spring    -->
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>5.1.9.RELEASE</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- json   -->
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.46</version>
         </dependency>
-
         <!--  cglib  -->
-
-        <!-- https://mvnrepository.com/artifact/cglib/cglib -->
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>2.2.2</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>1.7.30</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>ch.qos.logback</groupId>-->
-<!--            <artifactId>logback-core</artifactId>-->
-<!--            <version>1.2.3</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>ch.qos.logback</groupId>-->
-<!--            <artifactId>logback-classic</artifactId>-->
-<!--            <version>1.2.3</version>-->
-<!--        </dependency>-->
-
     </dependencies>
-
-
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -85,13 +49,11 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <scm>
         <url>git@github.com:FREEZINGPOINT/logging-web.git</url>
         <connection>scm:git@github.com:FREEZINGPOINT/logging-web.git</connection>
         <developerConnection>scm:git@github.com:FREEZINGPOINT/logging-web.git</developerConnection>
     </scm>
-
     <developers>
         <developer>
             <name>zhaoligang</name>
@@ -99,12 +61,10 @@
             <url>https://github.com/FREEZINGPOINT/logging-web</url>
         </developer>
     </developers>
-
     <issueManagement>
         <system>Github Issue</system>
         <url>https://github.com/FREEZINGPOINT/logging-web/issues</url>
     </issueManagement>
-
     <distributionManagement>
         <snapshotRepository>
             <id>sonatype</id>
@@ -115,7 +75,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
     <build>
         <plugins>
             <plugin>
@@ -185,6 +144,5 @@
                 </executions>
             </plugin>
         </plugins>
-
     </build>
 </project>

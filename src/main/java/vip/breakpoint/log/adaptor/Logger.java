@@ -1,7 +1,6 @@
 package vip.breakpoint.log.adaptor;
 
 /**
- * 日志的操作
  *
  * @author 赵立刚 <zlgtop@163.com>
  * Created on 2021-02-05

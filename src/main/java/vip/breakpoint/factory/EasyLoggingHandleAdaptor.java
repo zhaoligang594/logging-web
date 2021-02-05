@@ -1,7 +1,6 @@
 package vip.breakpoint.factory;
 
 /**
- * Adaptor for EasyLoggingHandle
  *
  * @author :breakpoint/赵立刚
  */

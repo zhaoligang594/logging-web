@@ -1,6 +1,7 @@
 package vip.breakpoint.factory;
 
 import vip.breakpoint.annotion.WebLogging;
+import vip.breakpoint.definition.ObjectMethodDefinition;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -10,8 +11,8 @@ import java.lang.reflect.Method;
  */
 public class LoggingJDKMethodInterceptor extends LoggingMethodInterceptorSupport implements InvocationHandler {
 
-    public LoggingJDKMethodInterceptor(WebLogging webLogging, Object target, EasyLoggingHandle easyLoggingHandle) {
-        super(webLogging, target, easyLoggingHandle);
+    public LoggingJDKMethodInterceptor(ObjectMethodDefinition methodDefinition, Object target, EasyLoggingHandle easyLoggingHandle) {
+        super(methodDefinition, target, easyLoggingHandle);
     }
 
     @Override
