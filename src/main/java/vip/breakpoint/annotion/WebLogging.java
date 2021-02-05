@@ -1,6 +1,6 @@
 package vip.breakpoint.annotion;
 
-import vip.breakpoint.factory.LoggingLevel;
+import vip.breakpoint.log.LoggingLevel;
 
 import java.lang.annotation.*;
 
@@ -19,6 +19,6 @@ public @interface WebLogging {
     String timePattern() default "yyyy-MM-dd HH:mm:ss";
 
     // is all to print
-    LoggingLevel logLevel() default LoggingLevel.ALL;
+    LoggingLevel logLevel() default LoggingLevel.INFO;
 
 }
