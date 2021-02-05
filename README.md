@@ -156,35 +156,38 @@ vip.breakpoint.service.MyEasyLoggingHandle.invokeAfter
 │   └── image-20200715171512729.png
 ├── pom.xml
 └── src
-    ├── main
-    │   ├── java
-    │   │   └── vip
-    │   │       └── breakpoint
-    │   │           ├── XmlEnableLoggingConfiguration.java
-    │   │           ├── annotion
-    │   │           │   ├── EnableLoggingConfiguration.java
-    │   │           │   └── WebLogging.java
-    │   │           ├── config
-    │   │           │   └── LoggingBeanDefinitionRegistrar.java
-    │   │           ├── exception
-    │   │           │   └── MultiInterfaceBeansException.java
-    │   │           ├── factory
-    │   │           │   ├── EasyLoggingHandle.java
-    │   │           │   ├── EasyLoggingHandleAdaptor.java
-    │   │           │   ├── LoggingCGlibMethodInterceptor.java
-    │   │           │   ├── LoggingFactory.java
-    │   │           │   ├── LoggingJDKMethodInterceptor.java
-    │   │           │   ├── LoggingLevel.java
-    │   │           │   └── LoggingMethodInterceptorSupport.java
-    │   │           └── process
-    │   │               └── LoggingBeanPostProcessor.java
-    │   └── resources
-    │       └── commons-logging.properties
-    └── test
+    └── main
         └── java
             └── vip
                 └── breakpoint
-
+                    ├── XmlEnableLoggingConfiguration.java
+                    ├── annotion
+                    │   ├── EnableLoggingConfiguration.java
+                    │   └── WebLogging.java
+                    ├── config
+                    │   └── LoggingBeanDefinitionRegistrar.java
+                    ├── definition
+                    │   └── ObjectMethodDefinition.java
+                    ├── exception
+                    │   └── MultiInterfaceBeansException.java
+                    ├── factory
+                    │   ├── EasyLoggingHandle.java
+                    │   ├── EasyLoggingHandleAdaptor.java
+                    │   ├── LoggingCGlibMethodInterceptor.java
+                    │   ├── LoggingFactory.java
+                    │   ├── LoggingJDKMethodInterceptor.java
+                    │   └── LoggingMethodInterceptorSupport.java
+                    ├── log
+                    │   ├── EventConstants.java
+                    │   ├── LoggingLevel.java
+                    │   ├── WebLogFactory.java
+                    │   └── adaptor
+                    │       ├── ConsoleLoggerImpl.java
+                    │       ├── DelegateLoggerImpl.java
+                    │       ├── Logger.java
+                    │       └── LoggerSupport.java
+                    └── process
+                        └── LoggingBeanPostProcessor.java
 ```
 
 ### 五、写在最后
