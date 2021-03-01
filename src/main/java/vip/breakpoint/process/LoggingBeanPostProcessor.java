@@ -13,8 +13,7 @@ import vip.breakpoint.definition.ObjectMethodDefinition;
 import vip.breakpoint.factory.EasyLoggingHandle;
 import vip.breakpoint.factory.LoggingFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author :breakpoint/赵立刚
@@ -24,9 +23,7 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
     private ApplicationContext applicationContext;
     private BeanDefinitionRegistry registry;
     private ConfigurableListableBeanFactory beanFactory;
-    private EasyLoggingHandle easyLoggingHandle;
-    private Map<String, Object> beanNamesMap = new HashMap<String, Object>();
-    private Object BEAN_NAME_OBJECT = new Object();
+    private final Set<String> beanNamesSet = new HashSet<String>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -35,11 +32,12 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (null != beanNamesMap.get(beanName)) {
+        if (beanNamesSet.contains(beanName)) {
             Class<?> oriClass = bean.getClass();
             ObjectMethodDefinition methodDefinition = new ObjectMethodDefinition();
             this.setMethodDefinition(oriClass, methodDefinition);
             if (methodDefinition.isShouldProxy()) {
+                EasyLoggingHandle easyLoggingHandle;
                 try {
                     easyLoggingHandle = applicationContext.getBean(EasyLoggingHandle.class);
                 } catch (BeansException e) {
@@ -82,8 +80,6 @@ public class LoggingBeanPostProcessor implements BeanDefinitionRegistryPostProce
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
         String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
-        for (String beanDefinitionName : beanDefinitionNames) {
-            beanNamesMap.put(beanDefinitionName, BEAN_NAME_OBJECT);
-        }
+        beanNamesSet.addAll(Arrays.asList(beanDefinitionNames));
     }
 }

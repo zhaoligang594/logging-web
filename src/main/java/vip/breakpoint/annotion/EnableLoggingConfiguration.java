@@ -14,4 +14,7 @@ import java.lang.annotation.*;
 @Import({LoggingBeanDefinitionRegistrar.class})
 public @interface EnableLoggingConfiguration {
 
+    // 线程池大小
+    int poolSize() default 50;
+
 }

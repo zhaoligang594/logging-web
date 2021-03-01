@@ -1,5 +1,7 @@
 package vip.breakpoint.factory;
 
+import static vip.breakpoint.executor.WeblogThreadPoolExecutor.executeDoLog;
+
 import com.alibaba.fastjson.JSONObject;
 import vip.breakpoint.annotion.WebLogging;
 import vip.breakpoint.definition.ObjectMethodDefinition;
@@ -49,8 +51,13 @@ public abstract class LoggingMethodInterceptorSupport {
                     .append(sdf.format(new Date()))
                     .append("】");
             logger.info(sb.toString());
+            if (null != easyLoggingHandle) {
+                executeDoLog(() -> {
+                    easyLoggingHandle.invokeBefore(methodName, args);
+                });
+            }
             try {
-                resVal = resVal = method.invoke(delegate, args);
+                resVal = method.invoke(delegate, args);
                 sb.delete(0, sb.length());
                 sb.append("request params:【")
                         .append(JSONObject.toJSONString(args))
@@ -63,9 +70,10 @@ public abstract class LoggingMethodInterceptorSupport {
                         .append("】");
                 logger.info(sb.toString());
                 if (null != easyLoggingHandle) {
-                    easyLoggingHandle.invokeAfter(methodName, args, resVal);
+                    executeDoLog(resVal, (result) -> {
+                        easyLoggingHandle.invokeAfter(methodName, args, result);
+                    });
                 }
-
             } catch (Exception e) {
                 sb.delete(0, sb.length());
                 sb.append("request params:【")
