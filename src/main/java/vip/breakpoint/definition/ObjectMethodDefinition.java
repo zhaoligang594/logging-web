@@ -12,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ObjectMethodDefinition {
 
-    private static final Map<String, WebLogging> methodMap = new ConcurrentHashMap<String, WebLogging>();
+    // : fixBug 出现异常的bug
+    private final Map<String, WebLogging> methodMap = new ConcurrentHashMap<String, WebLogging>();
     private final Map<Class<?>, WebLogging> webLoggingMap = new ConcurrentHashMap<Class<?>, WebLogging>();
     private static final Object object = new Object();
     private static final Set<String> excludeMethod = new HashSet<String>();
