@@ -13,9 +13,9 @@ public enum LoggingLevel {
     DEBUG(EventConstants.DEBUG_INT, "DEBUG"),
     TRACE(EventConstants.TRACE_INT, "TRACE");
 
-    private int levelInt;
+    private final int levelInt;
 
-    private String levelStr;
+    private final String levelStr;
 
     LoggingLevel(int i, String s) {
         levelInt = i;
