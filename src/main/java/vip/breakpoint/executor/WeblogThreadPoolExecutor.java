@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
- * @author 赵立刚 <zlgtop@163.com>
+ * @author 赵立刚
  * Created on 2021-02-05
  */
 public final class WeblogThreadPoolExecutor {

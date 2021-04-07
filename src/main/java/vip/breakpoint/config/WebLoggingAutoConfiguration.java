@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import vip.breakpoint.process.LoggingBeanPostProcessor;
 
 /**
- * @author 赵立刚 <zlgtop@163.com>
+ * @author 赵立刚
  * Created on 2021-04-02
  */
 @Configuration

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author 赵立刚 <zlgtop@163.com>
+ * @author 赵立刚
  * Created on 2021-02-05
  */
 public class DelegateLoggerImpl extends LoggerSupport {

@@ -20,7 +20,7 @@
 <dependency>
   <groupId>vip.breakpoint</groupId>
   <artifactId>logging-web</artifactId>
-  <version>1.0.0.RELEASE</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
