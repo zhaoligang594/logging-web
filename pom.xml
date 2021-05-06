@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>vip.breakpoint</groupId>
     <artifactId>logging-web</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <name>logging-web</name>
     <url>https://github.com/FREEZINGPOINT/logging-web</url>

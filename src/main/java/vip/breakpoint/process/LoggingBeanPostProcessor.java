@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import vip.breakpoint.annotion.WebLogging;
 import vip.breakpoint.definition.ObjectMethodDefinition;
-import vip.breakpoint.factory.EasyLoggingHandle;
+import vip.breakpoint.loghandle.EasyLoggingHandle;
 import vip.breakpoint.factory.LoggingFactory;
 
 import java.util.*;

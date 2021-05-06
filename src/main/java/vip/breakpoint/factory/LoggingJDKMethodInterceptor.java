@@ -1,12 +1,14 @@
 package vip.breakpoint.factory;
 
-import vip.breakpoint.annotion.WebLogging;
 import vip.breakpoint.definition.ObjectMethodDefinition;
+import vip.breakpoint.loghandle.EasyLoggingHandle;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
+ * JDK的代理
+ *
  * @author :breakpoint/赵立刚
  */
 public class LoggingJDKMethodInterceptor extends LoggingMethodInterceptorSupport implements InvocationHandler {

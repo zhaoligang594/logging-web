@@ -8,6 +8,8 @@ import org.springframework.util.MultiValueMap;
 import vip.breakpoint.XmlEnableLoggingConfiguration;
 
 /**
+ * bean的注册类
+ *
  * @author :breakpoint/赵立刚
  */
 public class LoggingBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
@@ -17,13 +19,14 @@ public class LoggingBeanDefinitionRegistrar implements ImportBeanDefinitionRegis
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
                                         BeanDefinitionRegistry registry) {
 
+        /*
+         * 下面的功能有待于扩展
+         */
         MultiValueMap<String, Object> attributes =
                 importingClassMetadata.getAllAnnotationAttributes("vip.breakpoint.annotion.EnableLoggingConfiguration");
-
-        int poolSize = (int)attributes.get("poolSize").get(0);
-
+        // 获取线程池的大小
+        int poolSize = (int) attributes.get("poolSize").get(0);
         registry.registerBeanDefinition(XmlEnableLoggingConfiguration.class.getName(),
                 new RootBeanDefinition(XmlEnableLoggingConfiguration.class));
-
     }
 }

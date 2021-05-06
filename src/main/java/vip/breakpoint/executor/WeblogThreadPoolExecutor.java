@@ -14,11 +14,9 @@ import java.util.function.Consumer;
  */
 public final class WeblogThreadPoolExecutor {
 
-    private WeblogThreadPoolExecutor() {
-    }
+    private WeblogThreadPoolExecutor() {/*refuse new project*/}
 
     private static final Logger logger = WebLogFactory.getLogger(WeblogThreadPoolExecutor.class, LoggingLevel.INFO);
-
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     static {

@@ -11,14 +11,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface WebLogging {
+    String[] methods() default {}; //需要打印日志的方法
 
-    // logging method 需要打印日志的方法
-    String[] methods() default {};
+    String timePattern() default "yyyy-MM-dd HH:mm:ss"; // 日期的格式
 
-    // date pattern 日期格式
-    String timePattern() default "yyyy-MM-dd HH:mm:ss";
+    LoggingLevel logLevel() default LoggingLevel.INFO; // 打印日志的级别
 
-    // is all to print
-    LoggingLevel logLevel() default LoggingLevel.INFO;
-
+    boolean loggingInSystem() default false; // 是否在系统中打印日志
 }

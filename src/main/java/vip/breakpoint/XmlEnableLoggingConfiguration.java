@@ -8,6 +8,8 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import vip.breakpoint.process.LoggingBeanPostProcessor;
 
 /**
+ * xml的配置
+ *
  * @author :breakpoint/赵立刚
  */
 public class XmlEnableLoggingConfiguration implements BeanDefinitionRegistryPostProcessor {
@@ -16,8 +18,9 @@ public class XmlEnableLoggingConfiguration implements BeanDefinitionRegistryPost
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         // nothing to do
     }
+
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        registry.registerBeanDefinition(LoggingBeanPostProcessor.class.getName(),new RootBeanDefinition(LoggingBeanPostProcessor.class));
+        registry.registerBeanDefinition(LoggingBeanPostProcessor.class.getName(), new RootBeanDefinition(LoggingBeanPostProcessor.class));
     }
 }

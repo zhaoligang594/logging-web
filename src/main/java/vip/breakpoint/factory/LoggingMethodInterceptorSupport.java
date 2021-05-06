@@ -8,23 +8,24 @@ import vip.breakpoint.definition.ObjectMethodDefinition;
 import vip.breakpoint.log.LoggingLevel;
 import vip.breakpoint.log.WebLogFactory;
 import vip.breakpoint.log.adaptor.Logger;
+import vip.breakpoint.loghandle.EasyLoggingHandle;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * 日志中间件的支持类
+ * 去掉没有意义的日志输出 防止产生大对象的问题
+ *
  * @author :breakpoint/赵立刚
  */
 public abstract class LoggingMethodInterceptorSupport {
-
-    private ObjectMethodDefinition methodDefinition;
-
-    private Object delegate;
-
-    private EasyLoggingHandle easyLoggingHandle;
-
+    private final ObjectMethodDefinition methodDefinition; // 对象的定义
+    private final Object delegate; //真正的对象
+    private final EasyLoggingHandle easyLoggingHandle; // 自定义的handle
     protected final Logger logger = WebLogFactory.getLogger(getClass(), LoggingLevel.TRACE);
 
     public LoggingMethodInterceptorSupport(ObjectMethodDefinition methodDefinition, Object delegate,
@@ -42,66 +43,70 @@ public abstract class LoggingMethodInterceptorSupport {
         if (methodDefinition.isHaveMethod(methodName)) {
             WebLogging webLogging = methodDefinition.getWebLoggingByMethod(methodName);
             SimpleDateFormat sdf = new SimpleDateFormat(webLogging.timePattern());
-            StringBuffer sb = new StringBuffer();
-            sb.append("request params:【")
-                    .append(JSONObject.toJSONString(args))
-                    .append("】||request method:【")
-                    .append(methodName)
-                    .append("】|| request time :【")
-                    .append(sdf.format(new Date()))
-                    .append("】");
-            logger.info(sb.toString());
-            if (null != easyLoggingHandle) {
-                executeDoLog(() -> {
-                    easyLoggingHandle.invokeBefore(methodName, args);
-                });
+            if (webLogging.loggingInSystem()) {
+                String sb = "request params:【" +
+                        JSONObject.toJSONString(args) +
+                        "】||request method:【" +
+                        methodName +
+                        "】|| request time :【" +
+                        sdf.format(new Date()) +
+                        "】";
+                logger.info(sb);
             }
             try {
+                // 获取方法上面的注解信息
+                Annotation[] annotations = method.getAnnotations();
+                if (null != easyLoggingHandle) {
+                    executeDoLog(() -> {
+                        easyLoggingHandle.invokeBefore(methodName, args, annotations);
+                    });
+                }
                 resVal = method.invoke(delegate, args);
-                sb.delete(0, sb.length());
-                sb.append("request params:【")
-                        .append(JSONObject.toJSONString(args))
-                        .append("】||request method:【")
-                        .append(methodName)
-                        .append("】|| complete time:【")
-                        .append(sdf.format(new Date()))
-                        .append("】||return val:【")
-                        .append(JSONObject.toJSONString(resVal))
-                        .append("】");
-                logger.info(sb.toString());
+                if (webLogging.loggingInSystem()) {
+                    String sb = "response params:【" +
+                            JSONObject.toJSONString(args) +
+                            "】||request method:【" +
+                            methodName +
+                            "】|| complete time:【" +
+                            sdf.format(new Date()) +
+                            "】||return val:【" +
+                            JSONObject.toJSONString(resVal) +
+                            "】";
+                    logger.info(sb);
+                }
                 if (null != easyLoggingHandle) {
                     executeDoLog(resVal, (result) -> {
-                        easyLoggingHandle.invokeAfter(methodName, args, result);
+                        easyLoggingHandle.invokeAfter(methodName, args, result, annotations);
                     });
                 }
             } catch (Exception e) {
-                sb.delete(0, sb.length());
-                sb.append("request params:【")
-                        .append(JSONObject.toJSONString(args))
-                        .append("】|| method:【")
-                        .append(methodName)
-                        .append("】|| current time:【")
-                        .append(sdf.format(new Date()))
-                        .append("】");
-                Throwable throwable = null;
+                Throwable throwable;
                 if (e instanceof InvocationTargetException) {
                     InvocationTargetException targetException = (InvocationTargetException) e;
                     throwable = targetException.getTargetException();
                 } else {
                     throwable = e;
                 }
-                sb.append("exception:【")
-                        .append(JSONObject.toJSONString(throwable.getClass().getName() + ":cause:" + throwable.getMessage()))
-                        .append("】");
-                if (null != easyLoggingHandle) {
-                    easyLoggingHandle.invokeOnThrowing(method.getName(), args, throwable);
+                if (webLogging.loggingInSystem()) {
+                    String sb = "request params:【" +
+                            JSONObject.toJSONString(args) +
+                            "】|| method:【" +
+                            methodName +
+                            "】|| current time:【" +
+                            sdf.format(new Date()) +
+                            "】" + "exception:【" +
+                            JSONObject.toJSONString(throwable.getClass().getName() + ":cause:" + throwable.getMessage()) +
+                            "】";
+                    logger.error(sb);
                 }
-                logger.error(sb.toString());
-                sb.delete(0, sb.length());
+                if (null != easyLoggingHandle) {
+                    easyLoggingHandle.invokeOnThrowing(method.getName(), args, method.getAnnotations(), throwable);
+                }
                 // throw exception
                 throw throwable;
             }
         } else {
+            // 不进行代理的操作
             resVal = method.invoke(delegate, args);
         }
         return resVal;

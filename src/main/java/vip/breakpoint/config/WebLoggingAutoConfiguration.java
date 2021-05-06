@@ -12,7 +12,7 @@ import vip.breakpoint.process.LoggingBeanPostProcessor;
 public class WebLoggingAutoConfiguration {
 
     @Bean
-    public LoggingBeanPostProcessor loggingBeanPostProcessor() {
+    public static LoggingBeanPostProcessor loggingBeanPostProcessor() {
         return new LoggingBeanPostProcessor();
     }
 }

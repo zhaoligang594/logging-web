@@ -2,10 +2,13 @@ package vip.breakpoint.factory;
 
 import net.sf.cglib.proxy.Enhancer;
 import vip.breakpoint.definition.ObjectMethodDefinition;
+import vip.breakpoint.loghandle.EasyLoggingHandle;
 
 import java.lang.reflect.Proxy;
 
 /**
+ * 获取代理对象的工厂类
+ *
  * @author :breakpoint/赵立刚
  */
 public final class LoggingFactory {
